@@ -6,8 +6,14 @@
 			<Breadcrumb v-if="store.appStore.theme.isBreadcrumb" />
 		</div>
 		<div class="navbar-right">
-			<!-- <Lang /> -->
+			<Lang />
 			<ComponentSize />
+			<a href="https://gitee.com/makunet/fast-admin" target="_blank">
+				<svg-icon icon="icon-github-fill"></svg-icon>
+			</a>
+			<a href="https://gitee.com/makunet" target="_blank">
+				<svg-icon icon="icon-earth"></svg-icon>
+			</a>
 			<Fullscreen />
 			<User />
 			<Settings />
