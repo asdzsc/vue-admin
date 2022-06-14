@@ -9,7 +9,7 @@
 git clone https://github.com/asdzsc/vue-admin.git
 
 # 进入项目
-cd fast-admin
+cd vue-admin
 
 # 安装依赖
 npm install

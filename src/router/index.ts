@@ -59,6 +59,98 @@ export const errorRoute: RouteRecordRaw = {
 	redirect: '/404'
 }
 
+
+export const routerList: RouteRecordRaw[] = [
+	{
+		path: '',
+		component: () => import('../views/sys/user/index.vue'),
+		meta: {
+			name: "权限管理",
+			icon: "icon-safetycertificate",
+			id: '1',
+			cache: true,
+			breadcrumb: [],
+			url: '',
+		},
+		children: [
+			{
+				path: '/sys/user/index',
+				meta: {
+					name: "用户管理",
+					icon: "icon-user",
+					id: '2',
+					cache: true,
+					breadcrumb: [],
+					url: 'sys/user/index'
+				},
+				component: () => import('../views/sys/user/index.vue')
+			},
+			{
+				path: '/sys/org/index',
+				meta: {
+					name: "机构管理",
+					icon: "icon-team",
+					id: '3',
+					cache: true,
+					breadcrumb: [],
+					url: "sys/org/index",
+				},
+				component: () => import('../views/sys/org/index.vue')
+			},
+			{
+				path: '/sys/post/index',
+				meta: {
+					name: "岗位管理",
+					icon: "icon-addteam",
+					id: '4',
+					cache: true,
+					breadcrumb: [],
+					url: "sys/post/index",
+				},
+				component: () => import('../views/sys/post/index.vue')
+			},
+			{
+				path: '/sys/role/index',
+				meta: {
+					name: "角色管理",
+					icon: "icon-team",
+					id: '5',
+					cache: true,
+					breadcrumb: [],
+					url: "sys/role/index",
+				},
+				component: () => import('../views/sys/role/index.vue')
+			},
+		]
+	},
+	{
+		path: '',
+		component: () => import('../views/sys/user/index.vue'),
+		meta: {
+			name: "系统设置",
+			icon: "icon-setting",
+			id: '6',
+			cache: true,
+			breadcrumb: [],
+			url: '',
+		},
+		children: [
+			{
+				path: '/sys/menu/index',
+				meta: {
+					name: "菜单管理",
+					icon: "icon-menu",
+					id: '7',
+					cache: true,
+					breadcrumb: [],
+					url: "sys/menu/index",
+				},
+				component: () => import('../views/sys/menu/index.vue')
+			},  
+		]
+	}
+]
+
 export const router = createRouter({
 	history: createWebHashHistory(),
 	routes: constantRoutes
@@ -70,7 +162,9 @@ const whiteList = ['/login']
 // 路由加载前
 router.beforeEach(async (to, from, next) => {
 	NProgress.start()
-
+	if (to.meta.title) {
+		document.title = 'SCRM-' + to.meta.title;
+	}
 	// token存在的情况
 	if (store.userStore.token) {
 		if (to.path === '/login') {
@@ -158,10 +252,10 @@ export const generateRoutes = (menuList: any): RouteRecordRaw[] => {
 		let path
 		if (menu.children && menu.children.length > 0) {
 			component = () => import('@/layout/index.vue')
-			path = '/p/' + menu.id
+			path = '/p/' + menu.meta.id
 		} else {
-			component = getDynamicComponent(menu.url)
-			path = '/' + menu.url
+			component = getDynamicComponent(menu.meta.url)
+			path = '/' + menu.meta.url
 		}
 		const route: RouteRecordRaw = {
 			path: path,
@@ -169,8 +263,8 @@ export const generateRoutes = (menuList: any): RouteRecordRaw[] => {
 			component: component,
 			children: [],
 			meta: {
-				title: menu.name,
-				icon: menu.icon,
+				title: menu.meta.name,
+				icon: menu.meta.icon,
 				id: '' + menu.id,
 				cache: true,
 				_blank: menu.openStyle === 1,

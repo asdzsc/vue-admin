@@ -6,11 +6,8 @@
 			<Breadcrumb v-if="store.appStore.theme.isBreadcrumb" />
 		</div>
 		<div class="navbar-right">
-			<!-- <Lang /> -->
-			<ComponentSize />
 			<Fullscreen />
 			<User />
-			<Settings />
 		</div>
 	</div>
 </template>
@@ -20,11 +17,8 @@ import store from '@/store'
 import Hamburger from './components/Hamburger.vue'
 import Refresh from './components/Refresh.vue'
 import Breadcrumb from './components/Breadcrumb.vue'
-import Lang from '@/components/lang/index.vue'
-import ComponentSize from './components/ComponentSize.vue'
 import Fullscreen from './components/Fullscreen.vue'
 import User from './components/User.vue'
-import Settings from '../Settings/index.vue'
 import { computed } from 'vue'
 
 const headerClass = computed(() => (store.appStore.theme.headerStyle === 'theme' ? 'header-theme' : ''))
