@@ -17,31 +17,31 @@
 					>{{ item }}</span
 				>
 			</el-row>
-			<el-form class="form" ref="loginFormRef" :model="loginForm" :rules="loginRules" @keyup.enter="onLogin" v-if="state.currentTab == 0">
-				<el-form-item prop="username">
-					<el-input :prefix-icon="User" placeholder="请输入手机号"></el-input>
+			<el-form class="form" ref="loginFormRef" :model="loginForm" :rules="loginRulesCode" @keyup.enter="onLogin" v-if="state.currentTab == 0">
+				<el-form-item prop="phone">
+					<el-input v-model="loginForm.phone" :prefix-icon="User" placeholder="请输入手机号"></el-input>
 				</el-form-item>
 				<el-form-item prop="captcha" class="login-captcha">
-					<el-input placeholder="请输入验证码" :prefix-icon="Lock"></el-input>
+					<el-input v-model="loginForm.captcha" placeholder="请输入验证码" :prefix-icon="Lock"></el-input>
 					<el-button class="el-btn" type="primary">获取验证码</el-button>
 				</el-form-item>
 				<el-form-item class="login-button">
-					<el-button type="primary" @click="onLogin()">{{ $t('app.signIn') }}</el-button>
+					<el-button type="primary" @click="onLogin()">登录</el-button>
 				</el-form-item>
 			</el-form>
-			<el-form class="form" ref="loginFormRef" :model="loginForm" :rules="loginRules" @keyup.enter="onLogin" v-if="state.currentTab == 1">
+			<el-form class="form" ref="loginFormRef" :model="loginForm" :rules="loginRulesPwd" @keyup.enter="onLogin" v-if="state.currentTab == 1">
 				<el-form-item prop="username">
-					<el-input v-model="loginForm.username" :prefix-icon="User" :placeholder="$t('app.username')"></el-input>
+					<el-input v-model="loginForm.username" :prefix-icon="User" placeholder="请输入用户名"></el-input>
 				</el-form-item>
 				<el-form-item prop="password">
-					<el-input v-model="loginForm.password" :prefix-icon="Lock" show-password :placeholder="$t('app.password')"></el-input>
+					<el-input v-model="loginForm.password" :prefix-icon="Lock" show-password placeholder="请输入密码"></el-input>
 				</el-form-item>
 				<el-form-item prop="captcha" class="login-captcha">
-					<el-input v-model="loginForm.captcha" :placeholder="$t('app.captcha')" :prefix-icon="Lock"></el-input>
+					<el-input v-model="loginForm.captcha" :prefix-icon="Lock" placeholder="请输入验证码"></el-input>
 					<img :src="captchaBase64" @click="onCaptcha" />
 				</el-form-item>
 				<el-form-item class="login-button">
-					<el-button type="primary" @click="onLogin()">{{ $t('app.signIn') }}</el-button>
+					<el-button type="primary" @click="onLogin()">登录</el-button>
 				</el-form-item>
 			</el-form>
 		</div>
@@ -55,6 +55,7 @@ import store from '@/store'
 import { useCaptchaApi } from '@/api/oauth'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { log } from 'console'
 
 const router = useRouter()
 const { t } = useI18n()
@@ -62,6 +63,7 @@ const loginFormRef = ref()
 const captchaBase64 = ref()
 
 const loginForm = reactive({
+	phone: '',
 	grant_type: 'password',
 	username: 'admin',
 	password: 'admin',
@@ -69,10 +71,14 @@ const loginForm = reactive({
 	captcha: ''
 })
 
-const loginRules = ref({
-	username: [{ required: true, message: t('required'), trigger: 'blur' }],
-	password: [{ required: true, message: t('required'), trigger: 'blur' }],
-	captcha: [{ required: true, message: t('required'), trigger: 'blur' }]
+const loginRulesCode = ref({
+	phone: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
+	captcha: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
+})
+const loginRulesPwd = ref({
+	username: [{ required: true, message: '请输入用户名', trigger: 'blur' }],
+	password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
+	captcha: [{ required: true, message: '请输入验证码', trigger: 'blur' }]
 })
 
 const state = reactive({
@@ -91,7 +97,6 @@ const onCaptcha = async () => {
 	loginForm.key = data.key
 	captchaBase64.value = data.image
 }
-
 const onLogin = () => {
 	loginFormRef.value.validate((valid: boolean) => {
 		if (!valid) {
